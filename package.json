@@ -1,0 +1,26 @@
+{
+  "name": "superformula-api",
+  "version": "1.0.0",
+  "description": "Superformula Mobile test",
+  "main": "index.js",
+  "dependencies": {
+    "serverless-dynamodb-local": "^0.2.39",
+    "serverless-wsgi": "^1.7.6",
+    "serverless-python-requirements": "^5.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GabrielAraujo/superformula-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GabrielAraujo/superformula-api/issues"
+  },
+  "homepage": "https://github.com/GabrielAraujo/superformula-api#readme"
+}
