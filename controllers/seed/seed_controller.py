@@ -53,7 +53,7 @@ def generate():
     )
 
 
-@seed_controller.route('', methods=['POST'])
+@seed_controller.route('/validate', methods=['POST'])
 def validate():
   seed = request.json['seed']
 
