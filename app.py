@@ -1,5 +1,5 @@
 from flask import Flask
-from controllers.seed import seed_controller;
+from controllers.seed.seed_controller import seed_controller
 
 app = Flask(__name__)
 

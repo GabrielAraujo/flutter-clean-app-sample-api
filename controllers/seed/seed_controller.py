@@ -1,11 +1,85 @@
-from flask import Blueprint
+from flask import Blueprint, Response, jsonify, make_response, request
+from datetime import datetime, timedelta
+import random
+import string
+import os
+import boto3
 
 seed_controller = Blueprint('seed_controller', __name__)
+seed_size = 36
+expiration_minutes = 5
+SEED_TABLE = os.environ['SEED_TABLE']
+IS_OFFLINE = os.environ.get('IS_OFFLINE')
 
-@seed_controller.route('/generate')
+if IS_OFFLINE:
+  client = boto3.client(
+      'dynamodb',
+      region_name='localhost',
+      endpoint_url='http://localhost:8000'
+  )
+else:
+  client = boto3.client('dynamodb')
+
+
+@seed_controller.route('', methods=['GET'])
 def generate():
-    return "This is an example app"
+  seed = ''.join(random.choice(string.ascii_lowercase + string.digits)
+                   for _ in range(seed_size))
+  expires_at = (datetime.now() +
+                  timedelta(minutes=expiration_minutes)).isoformat()
 
-@seed_controller.route('/validate')
+  try:
+    client.put_item(
+      TableName=SEED_TABLE,
+      Item={
+        'seed': {'S': seed},
+        'expires_at': {'S': expires_at}
+      }
+    )
+
+    return make_response(
+      jsonify(
+        seed=seed,
+        expires_at=expires_at
+      ),
+      200
+    )
+  except:
+    return make_response(
+      jsonify(
+        message="Something unexpected happened, try again later"
+      ),
+      500
+    )
+
+
+@seed_controller.route('', methods=['POST'])
 def validate():
-    return "This is an example app"
+  seed = request.json['seed']
+
+  try:
+    resp = client.get_item(
+      TableName=SEED_TABLE,
+      Key={'seed': {'S': seed}}
+    )
+
+    if 'Item' in resp:
+      return make_response(
+        jsonify(),
+        204
+      )
+
+    return make_response(
+      jsonify(
+        message= "No seed found for this code"
+      ),
+      404
+    )
+  except Exception as error:
+    print(error)
+    return make_response(
+      jsonify(
+          message="Something unexpected happened, try again later"
+      ),
+      500
+    )
