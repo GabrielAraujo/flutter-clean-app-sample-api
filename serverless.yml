@@ -20,7 +20,7 @@ provider:
         - { "Fn::GetAtt": ["SeedTable", "Arn" ] }
   environment:
     SEED_TABLE: ${self:custom.tableName}
-    EXPIRATION: ${env:EXPIRATION, 1}
+    EXPIRATION: ${env:EXPIRATION, 2}
 
 functions:
   getSeed:
