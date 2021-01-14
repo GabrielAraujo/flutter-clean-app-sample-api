@@ -1,5 +1,5 @@
 from flask import Blueprint, Response, jsonify, make_response, request
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import random
 import string
 import os
@@ -7,7 +7,7 @@ import boto3
 
 seed_controller = Blueprint('seed_controller', __name__)
 seed_size = 36
-expiration_minutes = 5
+expiration_minutes = int(os.environ['EXPIRATION'])
 SEED_TABLE = os.environ['SEED_TABLE']
 IS_OFFLINE = os.environ.get('IS_OFFLINE')
 
@@ -25,7 +25,8 @@ else:
 def generate():
   seed = ''.join(random.choice(string.ascii_lowercase + string.digits)
                    for _ in range(seed_size))
-  expires_at = (datetime.now() +
+  now = datetime.now().replace(tzinfo=timezone.utc)
+  expires_at = (now +
                   timedelta(minutes=expiration_minutes)).isoformat()
 
   try:
