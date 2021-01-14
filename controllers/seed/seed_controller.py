@@ -7,7 +7,7 @@ import boto3
 
 seed_controller = Blueprint('seed_controller', __name__)
 seed_size = 36
-expiration_minutes = 1
+expiration_minutes = os.environ['EXPIRATION']
 SEED_TABLE = os.environ['SEED_TABLE']
 IS_OFFLINE = os.environ.get('IS_OFFLINE')
 
