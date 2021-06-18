@@ -1,5 +1,5 @@
 # superformula-api
-Superformula Mobile test
+Flutter Clean App Sample API
 
 # Description
 This is a simple python project using the Flask to create REST endpoints. It also uses serverless framework to automate AWS infrastructure creation such as Lambda, Api Gateway and Dynamodb.
